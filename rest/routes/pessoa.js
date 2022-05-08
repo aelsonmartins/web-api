@@ -1,4 +1,5 @@
 const express = require('express');
+const { request } = require('../app');
 const router = express.Router();
 const pool = require('../pgsql').pool;
 
@@ -17,8 +18,12 @@ router.post('/', (req, res, next) => {
         }
 
         client.query(
-                'INSERT INTO website.pessoa (pessoa_nome,pessoa_cpf,pessoa_email,pessoa_data_nascimento) values ($1,$2,$3,$4);',
-            [req.body.pessoa_nome,req.body.pessoa_cpf,req.body.pessoa_email,req.body.pessoa_data_nascimento],
+            'INSERT INTO website.pessoa (pessoa_nome,pessoa_cpf,pessoa_email,pessoa_data_nascimento) values ($1,$2,$3,$4);',
+            [   req.body.pessoa_nome,
+                req.body.pessoa_cpf,
+                req.body.pessoa_email,
+                req.body.pessoa_data_nascimento
+            ],
             (error, result, fields) => {
                 release();//fecha conexão
                 
@@ -30,8 +35,24 @@ router.post('/', (req, res, next) => {
                     });
                 }
 
-                return res.status(200).send({
+                const response = {
                     mensagem: 'Pessoa inserida com sucesso!',
+                    dados: {
+                        pessoa_id: req.body.pessoa_id,
+                        pessoa_nome: req.body.pessoa_nome,
+                        pessoa_cpf: req.body.pessoa_cpf,
+                        pessoa_email: req.body.pessoa_email,
+                        pessoa_data_nascimento: req.body.pessoa_data_nascimento,
+                        request: {
+                            tipo: 'POST',
+                            descricao: 'Retorna todas as pessoas',
+                            url: 'http://localhost:3000/pessoa'
+                        }
+                    }
+                }
+
+                return res.status(200).send({
+                    response
                 });
             }
         )
@@ -65,6 +86,24 @@ router.get('/', (req, res, next) => {
                         response: null
                     });
                 }
+
+                /*const response = { VERIFICAR COM DIEGO PQ N FUNCIONA
+                    quantidade: result.rows,
+                    produtos: result.map(pessoa => {
+                        return {
+                            pessoa_id: result.pessoa_id,
+                            pessoa_nome: result.pessoa_nome,
+                            pessoa_cpf: result.pessoa_cpf,
+                            pessoa_email: result.pessoa_email,
+                            pessoa_data_nascimento: result.pessoa_data_nascimento,
+                            request: {
+                                tipo: 'GET',
+                                descricao: '',
+                                url: 'http://localhost:3000/pessoa/'+ pessoa.pessoa_id
+                            }
+                        }
+                    })
+                }*/
 
                 return res.status(200).send({
                     response: result.rows

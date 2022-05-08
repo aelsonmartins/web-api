@@ -4,7 +4,6 @@ const morgan = require('morgan');
 const bodyParser = require('body-parser');
 
 const rotaPessoa = require('./routes/pessoa');
-const rotaUsuario = require('./routes/usuario');
 
 //morgan gera log de execucao
 app.use(morgan('dev'));
@@ -30,8 +29,6 @@ app.use((req, res, next) => {
 });
 
 app.use('/pessoa', rotaPessoa);
-app.use('/usuario', rotaUsuario);
-
 
 //não entrou em nenhuma rota
 app.use((req, res, next) => {
