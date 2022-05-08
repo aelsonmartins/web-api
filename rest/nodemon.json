@@ -1,9 +1,0 @@
-{
-    "env" : {
-        "process.env.PGSQL_USER" : "admin",
-        "process.env.PGSQL_PASSWORD" : "admin",
-        "process.env.PGSQL_DATABASE" : "website",
-        "process.env.PGSQL_HOST" : "localhost",
-        "process.env.PGSQL_PORT" : 5432
-    }
-}

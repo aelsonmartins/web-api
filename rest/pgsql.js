@@ -1,14 +1,21 @@
-const { Pool } = require('pgsql');
+const { Pool } = require('pg');
 
-const pool = new Pool();
+//dados do banco
+const signerOptions = {
+    hostname: 'localhost',
+    port: 5432,
+    username: 'admin',
+    password : 'admin',
+    database : 'postgres'
+}
 
 
-/*({
-    user : process.env.PGSQL_USER,
-    password : process.env.PGSQL_PASSWORD,
-    database : process.env.PGSQL_DATABASE,
-    host : process.env.PGSQL_HOST,
-    port : process.env.PGSQL_PORT
-});*/
+const pool = new Pool({
+    user : signerOptions.username,
+    password : signerOptions.password,
+    database : signerOptions.database,
+    host : signerOptions.hostname,
+    port : signerOptions.port
+});
 
 exports.pool = pool;

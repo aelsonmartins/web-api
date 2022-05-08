@@ -1,71 +1,77 @@
 const express = require('express');
 const router = express.Router();
-const pgsql = require('../pgsql').pool;
+const pool = require('../pgsql').pool;
 
-//RETORNAR TODOS OS REGISTROS DE PESSOA
-router.get('/',(req,res,next) => {
-    res.status(200).send({
-        mensagem: 'Retornando as pessoas.'
-    });
-
-});
 
 //INSERE UMA PESSOA
 router.post('/', (req, res, next) => {
     //gera conexao ja com o sql e passando parametros
-    pgsql.getConnection((error, conn) => {
-        conn.query(
-                'INSERT INTO pessoa values (?,?,?,?)',
-            [req.body.pessoa_nome,req.body.pessoa_cpf,req.body.pessoa_email,req.body.pessoa_data_nascimento],
-            (error, resultado, field) => {
-                conn.release();//libera conexão
+    pool.connect((error, client, release) => {
 
+        //erro no client
+        if(error){
+            return res.status(500).send({
+                error: error.stack,
+                response: null
+            });
+        }
+
+        client.query(
+                'INSERT INTO website.pessoa (pessoa_nome,pessoa_cpf,pessoa_email,pessoa_data_nascimento) values ($1,$2,$3,$4);',
+            [req.body.pessoa_nome,req.body.pessoa_cpf,req.body.pessoa_email,req.body.pessoa_data_nascimento],
+            (error, result, fields) => {
+                release();//fecha conexão
+                
                 if(error){
-                    //se deu erro ja retorna com a msg  de erro
+                    //retorno do erro do banco
                     return res.status(500).send({
-                        error: error,
+                        error: error.stack,
                         response: null
                     });
                 }
 
-                res.status(201).send({
-                    mensagem: 'Pessoa criada com sucesso!',
-                    pessoaCriada: pessoa
+                return res.status(200).send({
+                    mensagem: 'Pessoa inserida com sucesso!',
                 });
             }
         )
     });
 });
 
-//RETORNAR UMA PESSOA ESPECIFICA
-router.get('/:id_pessoa',(req, res, next) => {
-    const id = req.params.id_pessoa
 
-    res.status(200).send({
-        mensagem: 'Dados da pessoa retornada',
-        id: id
+
+//RETORNA TODOS OS REGISTROS DE PESSOAS
+router.get('/', (req, res, next) => {
+    //gera conexao ja com o sql
+    pool.connect((error, client, release) => {
+
+        //erro na conexao
+        if(error){
+            return res.status(500).send({
+                error: error.stack,
+                response: null
+            });
+        }
+
+        client.query(
+                'SELECT * FROM website.pessoa;',
+            (error, result, fields) => {
+                release();//fecha conexão
+                
+                if(error){
+                    //retorno do erro do banco
+                    return res.status(500).send({
+                        error: error.stack,
+                        response: null
+                    });
+                }
+
+                return res.status(200).send({
+                    response: result.rows
+                });
+            }
+        )
     });
 });
-
-//ALTERA UMA PESSOA ESPECIFICA
-router.patch('/:id_pessoa',(req, res, next) => {
-    const id = req.params.id_pessoa
-
-    res.status(201).send({
-        mensagem: 'Pessoa alterada com sucesso!',
-        id: id
-    })
-});
-
-//DELETA UMA PESSOA
-router.delete('/:id_pessoa',(req, res, next) => {
-    const id = req.params.id_pessoa
-
-    res.status(201).send({
-        mensagem: 'Pessoa excluída com sucesso',
-        id: id
-    });
-});
-
 
 module.exports = router;
