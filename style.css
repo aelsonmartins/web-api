@@ -1,6 +1,9 @@
 :root{
-    --colorStart: #E8BF37;
-    --colorEnd: #BF5B84;
+    --bkgColorBtn: #7216EF;
+    --btnBorderColor: #000;
+
+    --bkgColorStart: #7216EF;
+    --bkgColorEnd: #fa64a2;
 }
 
 *{
@@ -13,7 +16,7 @@
 body{
     width: 100%;
     min-height: 100vh;
-    background: linear-gradient(0deg, var(--colorStart),var(--colorEnd));
+    background: linear-gradient(0deg, var(--bkgColorStart),var(--bkgColorEnd));
     display: flex;
     justify-content: center;
     align-items: center;
@@ -74,9 +77,9 @@ body{
     visibility: hidden;
 }
 
-.form button{
-    background-color: var(--colorEnd);
-    border: 2px solid var(--colorStart);
+.form .btn-login{
+    background-color: var(--bkgColorBtn);
+    border: 2px solid var(--btnBorderColor);
     color: #fff;
     font-size: 14px;
     width: 100%;
@@ -85,21 +88,65 @@ body{
     cursor: pointer;
 }
 
+.form .btn-send{
+    background-color: var(--bkgColorBtn);
+    border: 2px solid var(--btnBorderColor);
+    color: #fff;
+    font-size: 14px;
+    width: 100%;
+    border-radius: 10px;
+    padding: 10px;
+    cursor: pointer;
+}
+
+.form .btn-register{
+    background-color: var(--bkgColorBtn);
+    border: 2px solid var(--btnBorderColor);
+    color: #fff;
+    font-size: 14px;
+    width: 100%;
+    border-radius: 10px;
+    padding: 10px;
+    cursor: pointer;
+}
+
+button i{
+    margin-left: 5px;
+}
+
+
+.text{
+    text-align: center;
+    font-size: 20px;
+    margin: 1em;
+}
+
+a{
+    text-decoration: none;
+    color: black;
+    cursor: pointer;
+    font-size: 18px;
+}
+
+a:hover{
+    color: #e74c3c;
+}
+
 
 @keyframes changeBtnBackgroundColor {
     0% {
-        background-color: var(--colorEnd);
-        border-color:  var(--colorStart);
+        background-color: var(--bkgColorStart);
+        color: #fff;
     }
     
     100% {
-        background-color: var(--colorStart);
-        border-color: var(--colorEnd);
+        background-color: var(--bkgColorEnd);
+        color: #000;
     }
 }
 
 .form button:hover{
-    animation: changeBtnBackgroundColor 1s;
+    animation: changeBtnBackgroundColor 5s infinite;
 }
 
 
