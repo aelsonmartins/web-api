@@ -34,11 +34,12 @@ router.post('/', (req, res, next) => {
                         response: null
                     });
                 }
-
+                
+                
                 const response = {
                     mensagem: 'Pessoa inserida com sucesso!',
                     dados: {
-                        pessoa_id: req.body.pessoa_id,
+                        pessoa_id:result.pessoa_id,
                         pessoa_nome: req.body.pessoa_nome,
                         pessoa_cpf: req.body.pessoa_cpf,
                         pessoa_email: req.body.pessoa_email,
@@ -51,7 +52,7 @@ router.post('/', (req, res, next) => {
                     }
                 }
 
-                return res.status(200).send({
+                return res.status(201).send({
                     response
                 });
             }
@@ -87,11 +88,12 @@ router.get('/', (req, res, next) => {
                     });
                 }
 
-                /*const response = { VERIFICAR COM DIEGO PQ N FUNCIONA
-                    quantidade: result.rows,
-                    produtos: result.map(pessoa => {
+                
+                const response = { 
+                    quantidade: result.rows.length,
+                    pessoas: result.rows.map(pessoa => {
                         return {
-                            pessoa_id: result.pessoa_id,
+                            pessoa_id: result.rows.pessoa_id,
                             pessoa_nome: result.pessoa_nome,
                             pessoa_cpf: result.pessoa_cpf,
                             pessoa_email: result.pessoa_email,
@@ -103,10 +105,10 @@ router.get('/', (req, res, next) => {
                             }
                         }
                     })
-                }*/
+                }
 
                 return res.status(200).send({
-                    response: result.rows
+                   response
                 });
             }
         )
