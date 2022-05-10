@@ -115,4 +115,57 @@ router.get('/', (req, res, next) => {
     });
 });
 
+//DELETE DE UM REGISTRO DE PESSOA
+router.delete('/:pessoa_id', (req, res, next) => {
+    //gera conexao ja com o sql
+    pool.connect((error, client, release) => {
+
+        //erro na conexao
+        if(error){
+            return res.status(500).send({
+                error: error.stack,
+                response: null
+            });
+        }
+
+        client.query(
+                'DELETE * FROM website.pessoa p WHERE p.pessoa_id = $1;',
+                [req.body.pessoa_id],
+            (error, result, fields) => {
+                release();//fecha conexão
+                
+                if(error){
+                    //retorno do erro do banco
+                    return res.status(500).send({
+                        error: error.stack,
+                        response: null
+                    });
+                }
+
+                const response = { 
+                    pessoas: result.rows.map(pessoa => {
+                        return {
+                            pessoa_id: result.rows.pessoa_id,
+                            pessoa_nome: result.pessoa_nome,
+                            pessoa_cpf: result.pessoa_cpf,
+                            pessoa_email: result.pessoa_email,
+                            pessoa_data_nascimento: result.pessoa_data_nascimento,
+                            request: {
+                                tipo: 'DELETE',
+                                descricao: '',
+                                url: 'http://localhost:3000/pessoa/'
+                            }
+                        }
+                    })
+                }
+
+                return res.status(200).send({
+                   response
+                });
+            }
+        )
+    });
+});
+
+
 module.exports = router;
